@@ -11,8 +11,6 @@ public class Selector {
         this.index = index;
     }
 
-
-
     public String getTag() {
         return tag;
     }

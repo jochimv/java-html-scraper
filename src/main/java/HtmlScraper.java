@@ -3,6 +3,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,14 +18,21 @@ import java.util.concurrent.TimeUnit;
 
 public class HtmlScraper {
     private Document document;
+
     private String url;
-    private StringBuilder subfolder;
+    private ArrayList<String> subfolders;
     private Map<String, String> inputsAndValues;
-    private ArrayList<String> hyperlinks;
     private ArrayList<Selector> selectors;
+
+    private ArrayList<String> hyperlinks;
     private ArrayList<String> selectorsResult;
     private boolean containsGoodValues = false;
 
+    /**
+     * TYPE is an enum which specifies whether we want to scrape elements with, or without a tag.
+     1. with tags <p>lorem ipsum</p>
+     2. without tags, Lorem ipsum
+     */
     public enum TYPE {
         WITH_TAG, WITHOUT_TAG
     }
@@ -33,13 +41,13 @@ public class HtmlScraper {
         this.hyperlinks = new ArrayList<>();
         this.inputsAndValues = new HashMap<>();
         this.url = url;
-        this.subfolder = new StringBuilder("");
+        this.subfolders = new ArrayList<>();
         this.selectorsResult = new ArrayList<>();
         this.selectors = new ArrayList<>();
     }
 
-    public StringBuilder getSubfolder() {
-        return subfolder;
+    public String getSubfolder() {
+        return buildSubfolder();
     }
 
     public String getBaseUrl() {
@@ -50,14 +58,14 @@ public class HtmlScraper {
         return buildUrl().toString();
     }
 
-    public Map<String, String> getInputsAndValues() {
-        return inputsAndValues;
+    public String getInputsAndValues() {
+        return buildInputsAndValues();
     }
 
 
-    public HtmlScraper setSubfolder(String subfolder) {
-        clearSubfolder();
-        this.subfolder.append(subfolder);
+    public HtmlScraper setSubfolder(ArrayList<String> subfolders) {
+        clearSubfolders();
+        this.subfolders = subfolders;
         return this;
     }
 
@@ -77,7 +85,7 @@ public class HtmlScraper {
     }
 
     public HtmlScraper addSubfolder(String subfolder) {
-        this.subfolder.append(subfolder);
+        this.subfolders.add(subfolder);
         return this;
     }
 
@@ -116,48 +124,64 @@ public class HtmlScraper {
         return this;
     }
 
-    public Document getDocument() {
-        return document;
+    public List<Selector> getSelectors() {
+        return selectors;
     }
 
-    public HtmlScraper clearAttributes() {
+    public HtmlScraper clearInputs() {
         inputsAndValues.clear();
         return this;
     }
 
-    public HtmlScraper clearSubfolder() {
-        subfolder.replace(0, subfolder.length(), "");
+    public HtmlScraper clearSubfolders() {
+        subfolders.clear();
         return this;
     }
 
     public HtmlScraper clearSelectorResults() {
         selectorsResult.clear();
+        containsGoodValues = false;
         return this;
     }
 
-    public HtmlScraper clearSelectory() {
+    public HtmlScraper clearSelectors() {
         selectors.clear();
+        containsGoodValues = false;
         return this;
     }
 
     public HtmlScraper clearAll() {
-        clearAttributes();
-        clearSubfolder();
+        clearInputs();
+        clearSubfolders();
         clearSelectorResults();
-        clearSelectory();
+        clearSelectors();
+        containsGoodValues = false;
         return this;
     }
 
+    /**
+     * A method that gets the HTML code of the website and return it as a String
+     */
     public String getHtml() {
         finalizeAndConnect();
         return document.html();
     }
 
-    public ArrayList<String> getTags(String tag) {
+    /**
+     * A method that gets the all certain tags of the HTML document and return it as a list of strings. By default, it will scrape the elements
+     * with the tag, e.g. <p>lorem ipsum</p>
+     */
+    public List<String> getTags(String tag) {
         return getTags(tag, TYPE.WITH_TAG);
     }
 
-    public ArrayList<String> getTags(String tag, TYPE scrapeType) {
+    /**
+     * A method that gets the all certain tags of the HTML document and return it as a list of strings.
+     * @param scrapeType specifies whether do we want to scrape the tags
+     *                   1. with keeping tags <p>lorem ipsum</p>
+     *                   2. without keeping the tags, Lorem ipsum
+     */
+    public List<String> getTags(String tag, TYPE scrapeType) {
         finalizeAndConnect();
         Elements elements = this.document.getElementsByTag(tag);
         ArrayList<String> tags = new ArrayList<>();
@@ -177,11 +201,22 @@ public class HtmlScraper {
         }
     }
 
-    public ArrayList<String> getClass(String className) {
+    /**
+     * A method that gets all elements having a certain class in an HTML document and return it as a list of strings.
+     * By default, it will scrape the elements with the tag, e.g. <p class="xyz">lorem ipsum</p>
+     */
+    public List<String> getClass(String className) {
         return getClass(className, TYPE.WITH_TAG);
     }
 
-    public ArrayList<String> getClass(String className, TYPE scrapeType) {
+    /**
+     * A method that gets all elements having a certain class in an HTML document and return it as a list of strings.
+     *
+     * @param scrapeType specifies whether do we want to scrape the tags
+     *                   1. with keeping tags <p class="xyz">lorem ipsum</p>
+     *                   2. without keeping the tags, Lorem ipsum
+     */
+    public List<String> getClass(String className, TYPE scrapeType) {
         finalizeAndConnect();
         Elements elements = this.document.getElementsByClass(className);
         ArrayList<String> classes = new ArrayList<>();
@@ -200,10 +235,21 @@ public class HtmlScraper {
         }
     }
 
+    /**
+     * A method that gets an element having a certain id in a nHTML document and return it as a string.
+     * By default, it will scrape the element with the tag, e.g. <p id="xyz">lorem ipsum</p>
+     */
     public String getId(String id) {
         return getId(id, TYPE.WITH_TAG);
     }
 
+    /**
+     * A method that gets an element having a certain id in an HTML document and return it as a string.
+     *
+     * @param scrapeType specifies whether do we want to scrape the tags
+     *                   1. with keeping tags <p id="xyz">lorem ipsum</p>
+     *                   2. without keeping the tags, Lorem ipsum
+     */
     public String getId(String id, TYPE scrapeType) {
         finalizeAndConnect();
         Element element = document.getElementById(id);
@@ -217,14 +263,23 @@ public class HtmlScraper {
         }
     }
 
-    public String extractAttribute(int tagIndex, String tag, String attribute) {
+    /**
+     * A method for extracting an attribute value from an n-th certain tag of an HTML document. It is returned as a String.
+     */
+    public String getAttributeValue(int tagIndex, String tag, String attribute) {
         finalizeAndConnect();
         Elements elements = document.getElementsByTag(tag);
         Element element = elements.get(tagIndex);
         return element.attr(attribute);
     }
 
-    public ArrayList<String> extractAttributes(String tag, String attribute, boolean duplicates) {
+    /**
+     * A method for extracting all attribute values of a certain tag, for example we can scrape all text colors used in a webpage, and see which one
+     * is used the most.
+     *
+     * @param duplicates specifies whether we want to have dduplicate values in the result list
+     */
+    public List<String> getAttributeValues(String tag, String attribute, boolean duplicates) {
         finalizeAndConnect();
         Elements elements = document.getElementsByTag(tag);
         ArrayList<String> arguments = new ArrayList<>();
@@ -244,15 +299,22 @@ public class HtmlScraper {
         }
     }
 
-    public ArrayList<String> getHyperlinks() {
+    /**
+     * A method that is invoked only if we haven't scraped the hyperlinks yet (because of high time complexity),
+     * or if the hyperlink results have been cleared. It automatically converts the relative paths to absolute paths,
+     * and filters out the empty values.
+     */
+    public List<String> getHyperlinks() {
         if (this.hyperlinks.isEmpty()) {
-            ArrayList<String> hyperlinks = extractAttributes("a", "href", false);
+            List<String> hyperlinks = getAttributeValues("a", "href", false);
             ArrayList<String> hyperlinksCorrecred = new ArrayList<>();
             for (String hyperlink : hyperlinks) {
                 if (hyperlink.equals("/")) {
                     hyperlinksCorrecred.add(this.url + hyperlink);
                 } else if (hyperlink.startsWith("/") && hyperlink.length() > 1) {
-                    hyperlinksCorrecred.add(this.url + this.subfolder + hyperlink);
+                    hyperlinksCorrecred.add(this.url + buildSubfolder() + hyperlink);
+                } else if (!hyperlink.equals("/") && hyperlink.length() <= 1) {
+                    continue;
                 } else {
                     hyperlinksCorrecred.add(hyperlink);
                 }
@@ -262,132 +324,183 @@ public class HtmlScraper {
         return this.hyperlinks;
     }
 
-    public ArrayList<String> getSelectorsResult() {
+    /**
+     * A method that is invoked only if we haven't scraped the selector results yet (because of high time complexity)
+     * or if the selector results have been cleared.
+     */
+    public List<String> getSelectorsResult() {
         if (selectors.isEmpty() && selectorsResult.isEmpty()) {
             System.out.println("No HTML selectors inserted");
             return null;
         } else if (!selectors.isEmpty() && selectorsResult.isEmpty()) {
             finalizeAndConnect();
-            scrapeSelectorResult2(document.getAllElements(), 0);
+            scrapeSelectorResult(document.getAllElements(), 0);
         }
         return this.selectorsResult;
     }
 
-    private void scrapeSelectorResult() {
-        finalizeAndConnect();
-        String selector = buildSelector();
-        Elements elements = document.select(selector);
-        for (Element e : elements) {
-            selectorsResult.add(e.html());
-        }
-    }
-
-    public void scrapeSelectorResult2(Elements e, int i) {
-        if (i == selectors.size()) {
-            for (Element el : e) {
+    /**
+     * A method for managing the recursion of scrapeSelectorResults.
+     *
+     * @param elements at first turn are the all elements of the HTML document,
+     *                 on the second and every following turn are the elements that meets the n-th tag selector.
+     *                 On the last turn - if the given index is bigger than the last selector index (there are no more selectors),
+     *                 the remaining elements are saved into the selector results.
+     */
+    private void scrapeSelectorResult(Elements elements, int index) {
+        if (index == selectors.size()) {
+            for (Element el : elements) {
                 selectorsResult.add(el.html());
             }
             return;
         }
-        Selector s = selectors.get(i);
-        String tag = s.getTag();
-        String attribute = s.getAttribute();
-        String value = s.getValue();
-        int index = s.getIndex();
-        Elements elements = new Elements();
-        Element element = null;
+        Selector s = selectors.get(index);
+        Elements scrapedElements = getRightElementsForSelector(elements, s);
 
+        scrapeSelectorResult(scrapedElements, index + 1);
+    }
+
+    /**
+     * A method for scraping the elements from the webpage by given selectors.
+     * The elements will be selected based on order of the selectors, eg:
+     * 'div > p' will select all p elements inside div. This method checks for "right values" in case of a specified index -
+     * because it uses recursion and the elements at the start of recursion are all elements of the document. It needs to select all elements
+     * with the given tag, and then get the element with a specified index. Otherwise, It would loop through all the document elements,
+     * and select all theirs n-th element. If an index is specified on the second and every next selector, the program knows that it contains good elements,
+     * and can loop through the given list, getting the n-th element of the second tag.
+     */
+    private Elements getRightElementsForSelector(Elements givenElements, Selector selector) {
+        Elements scrapedElements = new Elements();
+        String tag = selector.getTag();
+        String attribute = selector.getAttribute();
+        String value = selector.getValue();
+        int index = selector.getIndex();
+        Element element;
 
         if (tag != null && attribute == null && value == null && index == -1) {
-            elements = e.select(tag);
+            scrapedElements = givenElements.select(tag);
             containsGoodValues = true;
         } else if (tag != null && attribute == null && value == null && index >= 0) {
             if (containsGoodValues) {
-                for (Element el : e) {
-                    element = el.select(tag).get(index);
-                    elements.add(element);
+                for (Element el : givenElements) {
+                    try {
+                        element = el.select(tag).get(index);
+                        scrapedElements.add(element);
+                    } catch (Exception exception) {
+                    }
                 }
             } else {
-                element = e.select(tag).get(index);
-                elements.add(element);
+                element = givenElements.select(tag).get(index);
+                scrapedElements.add(element);
                 this.containsGoodValues = true;
             }
 
         } else if (tag != null && attribute != null && value == null && index == -1) {
-            elements = e.select(tag + "[" + attribute + "]");
+            scrapedElements = givenElements.select(tag + "[" + attribute + "]");
             containsGoodValues = true;
         } else if (tag != null && attribute != null && value == null && index >= 0) {
             if (containsGoodValues) {
-                for (Element el : e) {
+                for (Element el : givenElements) {
                     element = el.select(tag + "[" + attribute + "]").get(index);
-                    elements.add(element);
+                    scrapedElements.add(element);
                 }
             } else {
-                element = e.select(tag).get(index);
-                elements.add(element);
+                element = givenElements.select(tag).get(index);
+                scrapedElements.add(element);
                 this.containsGoodValues = true;
             }
 
         } else if (tag != null && attribute != null && value != null && index == -1) {
-            elements = e.select(tag + "[" + attribute + "='" + value + "']");
+            scrapedElements = givenElements.select(tag + "[" + attribute + "='" + value + "']");
             containsGoodValues = true;
         } else {
             if (containsGoodValues) {
-                for (Element el : e) {
-                    element = el.select(tag + "[" + attribute + "$=" + value + "]").get(index);
-                    elements.add(element);
+                for (Element el : givenElements) {
+                    element = el.select(tag + "[" + attribute + "=" + value + "]").get(index);
+                    scrapedElements.add(element);
                 }
             } else {
-                element = e.select(tag).get(index);
-                elements.add(element);
+                element = givenElements.select(tag).get(index);
+                scrapedElements.add(element);
                 this.containsGoodValues = true;
             }
-
         }
-        scrapeSelectorResult2(elements, i + 1);
-
+        return scrapedElements;
     }
 
-
-    private String buildSelector() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Selector t : selectors) {
-            if (t.getAttribute() == null) {
-                stringBuilder.append(t.getTag() + " > ");
-            } else if (t.getValue() == null) {
-                stringBuilder.append(t.getTag() + "[" + t.getAttribute() + "] > ");
-            } else {
-                stringBuilder.append(t.getTag() + "[" + t.getAttribute() + "$=" + t.getValue() + "] > ");
-            }
-        }
-        return stringBuilder.replace(stringBuilder.length() - 3, stringBuilder.length(), "").toString();
-    }
-
+    /**
+     * A method that is composed of two steps:
+     * 1. step is building the final URL
+     * 2. step is connecting to the URL, and getting the document, which contains the HTML code
+     * along with all elements of the website
+     */
     private void finalizeAndConnect() {
-        StringBuilder finalUrl = buildUrl();
+        String finalUrl = buildUrl();
         connect(finalUrl);
     }
 
-    private void connect(StringBuilder finalUrl) {
-        Connection connection = Jsoup.connect(finalUrl.toString()).timeout(10000);
+    /**
+     * A method that connects to the given URL, and gets the document, which contains the HTML code
+     * along with all elements of the website
+     */
+    private void connect(String finalUrl) {
+        Connection connection = Jsoup.connect(finalUrl).timeout(10000);
         try {
             this.document = connection.get();
         } catch (IOException e) {
-            System.out.println("Problem instantiating a HtmlScraper on " + buildUrl());
+            System.out.println("Problem instantiating an HtmlScraper on " + buildUrl());
+            e.printStackTrace();
         }
     }
 
-    private StringBuilder buildUrl() {
-        StringBuilder finalUrl = new StringBuilder(url + subfolder + (inputsAndValues.size() > 0 ? "?" : ""));
-        for (Map.Entry<String, String> entry : inputsAndValues.entrySet()) {
-            finalUrl.append(entry.getKey() + "=" + entry.getValue() + "&");
-        }
+    /**
+     * A method that builds the full URL from the given URL, subfolders, and inputs with values
+     */
+    private String buildUrl() {
+        String subfolder = buildSubfolder();
+        String inputsAndValues = buildInputsAndValues();
+        return url + subfolder + inputsAndValues;
+    }
+
+    /**
+     * A method, that builds input and value combos.
+     * The final String will be passed to the URL, which is used for passing the values to the input fields
+     */
+    private String buildInputsAndValues() {
+        StringBuilder inputsAndValues = new StringBuilder("?");
         if (this.inputsAndValues.size() > 0) {
-            finalUrl.deleteCharAt(finalUrl.length() - 1);
+            for (Map.Entry<String, String> entry : this.inputsAndValues.entrySet()) {
+                inputsAndValues.append(entry.getKey() + "=" + entry.getValue() + "&");
+            }
+        } else {
+            return "";
         }
-        return finalUrl;
+        return inputsAndValues.substring(0, inputsAndValues.length() - 1);
     }
 
+    /**
+     * A method, that builds subfolder path on current webpage.
+     */
+    private String buildSubfolder() {
+        StringBuilder builtSubfolder = new StringBuilder("/");
+        for (String subfolder : subfolders) {
+            builtSubfolder.append(subfolder + "/");
+        }
+        if (url.endsWith("/") && subfolders.size() != 0) {
+            return builtSubfolder.substring(1, builtSubfolder.length() - 1);
+        } else if (!url.endsWith("/") && subfolders.size() != 0) {
+            return builtSubfolder.substring(0, builtSubfolder.length() - 1);
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * A method for scraping-by-selectors automatization.
+     * The user specifies a log file path, and how often the webpage scraping should happen. Then, the scraping will happen every given amount of time.
+     * The scraped data is saved into the log file along with a timestamp, every value is on the new line.
+     * If a log file path is not found, a file will be created on this path.
+     */
     public void automatizeSelectors(String path, int days, int hours, int minutes, int seconds, int ms) {
         long miliseconds = calculateMiliseconds(days, hours, minutes, seconds, ms);
         Path logFile = getPath(path);
@@ -396,6 +509,12 @@ public class HtmlScraper {
         automatize(miliseconds, r);
     }
 
+    /**
+     * A method for periodical full HTML document scraping. An HTML snapshot will be created after given period of time.
+     * Method accepts a folder path as an argument, and if no folder is found on this path, it will be automatically created.
+     * The method creates a new file for every snapshot. The name of the file is the timestamp.html
+     * This method does not download external CSS. It is recommended to put a webpage url as a target folder, for a better classification. .
+     */
     public void htmlSnapshots(String targetFolder, int days, int hours, int minutes, int seconds, int ms) {
         long miliseconds = calculateMiliseconds(days, hours, minutes, seconds, ms);
         Path target = getPath(targetFolder);
@@ -404,59 +523,80 @@ public class HtmlScraper {
         automatize(miliseconds, r);
     }
 
+    /**
+     * A method that creates Runnable for HTML snapshotting. This runnable is then triggered every given period of time,
+     * by a ScheduledExecutorService.
+     */
     private Runnable createRunnableForSnapshots(Path targetFolder) {
-        Runnable r = () -> {
-            Timestamp timeStamp = getTimesStamp();
-            try {
-                String delimeter = FileSystems.getDefault().getSeparator();
-                String inputPath = targetFolder + delimeter + timeStamp.toString().replaceAll(" ", "_") + ".html";
-                Files.createFile(FileSystems.getDefault().getPath(inputPath));
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(inputPath));
-                String html = getHtml();
-
-                bufferedWriter.write(html);
-
-                bufferedWriter.close();
-            } catch (IOException e) {
-                System.out.println("Unable to write a log: " + e.getMessage());
-                e.printStackTrace();
-            }
-        };
-        return r;
+        return () -> writeHtml(targetFolder);
     }
 
+    /**
+     * A method for creating a file in the specified folder and writing out the Html-snapshot to this file.
+     */
+    private void writeHtml(Path targetFolder) {
+        Timestamp timeStamp = getTimesStamp();
+        try {
+            String delimeter = FileSystems.getDefault().getSeparator();
+            String inputPath = targetFolder + delimeter + timeStamp.toString().replaceAll(" ", "_") + ".html";
+            Files.createFile(FileSystems.getDefault().getPath(inputPath));
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(inputPath));
+            String html = getHtml();
+
+            bufferedWriter.write(html);
+
+            bufferedWriter.close();
+        } catch (IOException e) {
+            System.out.println("Unable to write a log: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * A method for invoking a runnable every given, specified amount of time.
+     */
     private void automatize(long miliseconds, Runnable r) {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.scheduleAtFixedRate(r, 0, miliseconds, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * A method that creates Runnable for scraping-by-selectors. This runnable is then triggered every given period of time,
+     * by a ScheduledExecutorService.
+     */
     private Runnable createRunnableForSelectors(Path logFile) {
-        Runnable r = () -> {
-            Timestamp timeStamp = getTimesStamp();
-            try {
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(logFile.toString(), true));
-                bufferedWriter.write(timeStamp + "");
+        return () -> writeSelectors(logFile);
+        
+    }
+
+    /**
+     * A method for writing out the get-by-selectors result to a specified file. At the end, the selector result list is cleared,
+     * in order to scrape the elements again.
+     */
+    private void writeSelectors(Path logFile) {
+        Timestamp timeStamp = getTimesStamp();
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(logFile.toString(), true));
+            bufferedWriter.write(timeStamp + "");
+            bufferedWriter.newLine();
+
+            List<String> values = getSelectorsResult();
+            for (String value : values) {
+                bufferedWriter.write(value);
                 bufferedWriter.newLine();
-
-                ArrayList<String> values = getSelectorsResult();
-                for (String value : values) {
-                    bufferedWriter.write(value);
-                    bufferedWriter.newLine();
-                }
-                clearSelectorResults();
-                bufferedWriter.close();
-            } catch (IOException e) {
-                System.out.println("Unable to write a log: " + e.getMessage());
-                e.printStackTrace();
             }
-        };
-        return r;
+            clearSelectorResults();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            System.out.println("Unable to write a log: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    private Timestamp getTimesStamp() {
-        return new Timestamp(System.currentTimeMillis());
-    }
-
+    /**
+     * A method that is used for a path validation, optionally creation of the file/folder on a specified path.
+     */
     private void createPath(Path logFile) {
         try {
             if (Files.isRegularFile(logFile) && !Files.exists(logFile)) {
@@ -472,6 +612,10 @@ public class HtmlScraper {
 
     private Path getPath(String path) {
         return FileSystems.getDefault().getPath(path);
+    }
+
+    private Timestamp getTimesStamp() {
+        return new Timestamp(System.currentTimeMillis());
     }
 
     private long calculateMiliseconds(int days, int hours, int minutes, int seconds, long ms) {

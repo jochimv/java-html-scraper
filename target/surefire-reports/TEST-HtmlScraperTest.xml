@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="HtmlScraperTest" time="5.619" tests="9" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/vaclav/IdeaProjects/Webscraper/target/test-classes:/home/vaclav/IdeaProjects/Webscraper/target/classes:/home/vaclav/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.7.0/junit-jupiter-engine-5.7.0.jar:/home/vaclav/.m2/repository/org/apiguardian/apiguardian-api/1.1.0/apiguardian-api-1.1.0.jar:/home/vaclav/.m2/repository/org/junit/platform/junit-platform-engine/1.7.0/junit-platform-engine-1.7.0.jar:/home/vaclav/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/vaclav/.m2/repository/org/junit/platform/junit-platform-commons/1.7.0/junit-platform-commons-1.7.0.jar:/home/vaclav/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.7.0/junit-jupiter-api-5.7.0.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/htmlunit/2.54.0/htmlunit-2.54.0.jar:/home/vaclav/.m2/repository/xalan/xalan/2.7.2/xalan-2.7.2.jar:/home/vaclav/.m2/repository/xalan/serializer/2.7.2/serializer-2.7.2.jar:/home/vaclav/.m2/repository/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar:/home/vaclav/.m2/repository/org/apache/commons/commons-text/1.9/commons-text-1.9.jar:/home/vaclav/.m2/repository/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar:/home/vaclav/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar:/home/vaclav/.m2/repository/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar:/home/vaclav/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/htmlunit-core-js/2.54.0/htmlunit-core-js-2.54.0.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/neko-htmlunit/2.54.0/neko-htmlunit-2.54.0.jar:/home/vaclav/.m2/repository/xerces/xercesImpl/2.12.0/xercesImpl-2.12.0.jar:/home/vaclav/.m2/repository/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/htmlunit-cssparser/1.10.0/htmlunit-cssparser-1.10.0.jar:/home/vaclav/.m2/repository/commons-io/commons-io/2.10.0/commons-io-2.10.0.jar:/home/vaclav/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/home/vaclav/.m2/repository/commons-net/commons-net/3.8.0/commons-net-3.8.0.jar:/home/vaclav/.m2/repository/org/brotli/dec/0.1.2/dec-0.1.2.jar:/home/vaclav/.m2/repository/com/shapesecurity/salvation2/3.0.0/salvation2-3.0.0.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/websocket/websocket-client/9.4.44.v20210927/websocket-client-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-client/9.4.44.v20210927/jetty-client-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-http/9.4.44.v20210927/jetty-http-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-util/9.4.44.v20210927/jetty-util-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-io/9.4.44.v20210927/jetty-io-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/websocket/websocket-common/9.4.44.v20210927/websocket-common-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/websocket/websocket-api/9.4.44.v20210927/websocket-api-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/jsoup/jsoup/1.10.2/jsoup-1.10.2.jar:"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk-17/lib"/>
+    <property name="sun.java.command" value="/home/vaclav/IdeaProjects/Webscraper/target/surefire/surefirebooter17950831114799623641.jar /home/vaclav/IdeaProjects/Webscraper/target/surefire 2021-10-24T12-58-35_107-jvmRun1 surefire14920432760945163141tmp surefire_012697864871692232018tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/vaclav/IdeaProjects/Webscraper/target/test-classes:/home/vaclav/IdeaProjects/Webscraper/target/classes:/home/vaclav/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.7.0/junit-jupiter-engine-5.7.0.jar:/home/vaclav/.m2/repository/org/apiguardian/apiguardian-api/1.1.0/apiguardian-api-1.1.0.jar:/home/vaclav/.m2/repository/org/junit/platform/junit-platform-engine/1.7.0/junit-platform-engine-1.7.0.jar:/home/vaclav/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/vaclav/.m2/repository/org/junit/platform/junit-platform-commons/1.7.0/junit-platform-commons-1.7.0.jar:/home/vaclav/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.7.0/junit-jupiter-api-5.7.0.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/htmlunit/2.54.0/htmlunit-2.54.0.jar:/home/vaclav/.m2/repository/xalan/xalan/2.7.2/xalan-2.7.2.jar:/home/vaclav/.m2/repository/xalan/serializer/2.7.2/serializer-2.7.2.jar:/home/vaclav/.m2/repository/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar:/home/vaclav/.m2/repository/org/apache/commons/commons-text/1.9/commons-text-1.9.jar:/home/vaclav/.m2/repository/org/apache/httpcomponents/httpmime/4.5.13/httpmime-4.5.13.jar:/home/vaclav/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar:/home/vaclav/.m2/repository/org/apache/httpcomponents/httpcore/4.4.13/httpcore-4.4.13.jar:/home/vaclav/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/htmlunit-core-js/2.54.0/htmlunit-core-js-2.54.0.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/neko-htmlunit/2.54.0/neko-htmlunit-2.54.0.jar:/home/vaclav/.m2/repository/xerces/xercesImpl/2.12.0/xercesImpl-2.12.0.jar:/home/vaclav/.m2/repository/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar:/home/vaclav/.m2/repository/net/sourceforge/htmlunit/htmlunit-cssparser/1.10.0/htmlunit-cssparser-1.10.0.jar:/home/vaclav/.m2/repository/commons-io/commons-io/2.10.0/commons-io-2.10.0.jar:/home/vaclav/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/home/vaclav/.m2/repository/commons-net/commons-net/3.8.0/commons-net-3.8.0.jar:/home/vaclav/.m2/repository/org/brotli/dec/0.1.2/dec-0.1.2.jar:/home/vaclav/.m2/repository/com/shapesecurity/salvation2/3.0.0/salvation2-3.0.0.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/websocket/websocket-client/9.4.44.v20210927/websocket-client-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-client/9.4.44.v20210927/jetty-client-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-http/9.4.44.v20210927/jetty-http-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-util/9.4.44.v20210927/jetty-util-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/jetty-io/9.4.44.v20210927/jetty-io-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/websocket/websocket-common/9.4.44.v20210927/websocket-common-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/eclipse/jetty/websocket/websocket-api/9.4.44.v20210927/websocket-api-9.4.44.v20210927.jar:/home/vaclav/.m2/repository/org/jsoup/jsoup/1.10.2/jsoup-1.10.2.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/vaclav"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2021-09-14"/>
+    <property name="java.home" value="/usr/lib/jvm/jdk-17"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/vaclav/IdeaProjects/Webscraper"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="/home/vaclav/IdeaProjects/Webscraper/target/surefire/surefirebooter17950831114799623641.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="17+35-LTS-2724"/>
+    <property name="user.name" value="vaclav"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="5.11.0-38-generic"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="/home/vaclav/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="idea.version" value="2021.2.3"/>
+    <property name="java.version" value="17"/>
+    <property name="user.dir" value="/home/vaclav/IdeaProjects/Webscraper"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="17+35-LTS-2724"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="61.0"/>
+  </properties>
+  <testcase name="testGetClass" classname="HtmlScraperTest" time="1.014"/>
+  <testcase name="testExtractAttributes" classname="HtmlScraperTest" time="1.25"/>
+  <testcase name="testClear" classname="HtmlScraperTest" time="0.003"/>
+  <testcase name="testGetId" classname="HtmlScraperTest" time="0.338"/>
+  <testcase name="testGetSelectorResult" classname="HtmlScraperTest" time="2.029"/>
+  <testcase name="testGetHyperlinks" classname="HtmlScraperTest" time="0.383"/>
+  <testcase name="testGetHtml" classname="HtmlScraperTest" time="0.166"/>
+  <testcase name="testGetTags" classname="HtmlScraperTest" time="0.404"/>
+  <testcase name="testGetUrl" classname="HtmlScraperTest" time="0.002"/>
+</testsuite>
